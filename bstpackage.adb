@@ -2,14 +2,15 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body bstpackage is
 
+    procedure init(Tree : in out BST) is
+    begin
+        Tree := NULL;
+    end init;
+
     function isEmpty(Tree : BST) return Boolean is
     begin
-        if Tree.right = NULL then
-            if Tree.Left = NULL then
-                return True;
-            else
-                return False;
-            end if;
+        if Tree = NULL then
+            return True;
         else
             return False;
         end if;
@@ -19,47 +20,35 @@ package body bstpackage is
     -- if it is empty then the value would be made the root node of the BST.
     -- if it is not empty then the value would be placed in the correct location.
     procedure add(Item : ItemType; Tree : in out BST) is
-        function addHelper(Item : ItemType; n : NodePtr) return Node is
+        newNode : NodePtr := new Node;
+        procedure addHelper(Item : ItemType; n : NodePtr) is
         begin
-            if Item < n.Data then
+
+            if compare(Item, n.Data) < 0 then
                 if n.Left = NULL then
-                    return n.all;
+                    n.Left := newNode;
                 else
-                    return addHelper(Item, n.Left);
+                    addHelper(Item, n.Left);
                 end if;
-            elsif Item > n.Data then
+            elsif compare(Item, n.Data) > 0 then
                 if n.Right = NULL then
-                    return n.all;
+                    n.Right := newNode;
                 else
-                    return addHelper(Item, n.Right);
+                    addHelper(Item, n.Right);
                 end if;
+            else
+                put("Item is already in the array");
             end if;
         end;
-        newNode : NodePtr := new Node;
-        parentNode : Node;
     begin
         newNode.Data := Item;
         newNode.Left := NULL;
         newNode.Right := NULL;
 
         if isEmpty(Tree) then
-            if Item < Tree.Data then
-                Tree.Left := newNode;
-            elsif Item > Tree.Data then
-                Tree.Right := newNode;
-            else
-                put_line("Item is already in the binary search tree.");
-            end if;
+            Tree := BST(newNode);
         else
-            if Item < Tree.Data then
-                parentNode := addHelper(Item, Tree.Left);
-                parentNode.Left := newNode;
-            elsif Item > Tree.Data then
-                parentNode := addHelper(Item, Tree.Right);
-                parentNode.Right := newNode;
-            else
-                put_line("Item is already in the binary search tree.");
-            end if;
+            addHelper(Item, NodePtr(Tree));
         end if;
     end add;
 
@@ -74,9 +63,20 @@ package body bstpackage is
     end contains;
 
 
+    -- Split the BST into three parts (left sub tree, root, right sub tree)
+    -- go down the left sub tree and split that into three parts
+    -- once there is a tree with both left / right pointers that are null print the value
     procedure printInSortedOrder(Tree : BST) is
+        procedure printInSortedOrderHelper(n : NodePtr) is
+        begin
+            null;
+        end;
     begin
-        NULL;
+        
+        if isEmpty(Tree) then
+            null;
+
+        end if;
     end printInSortedOrder;
 
 end bstpackage;

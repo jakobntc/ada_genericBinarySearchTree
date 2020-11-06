@@ -32,6 +32,10 @@ package bstpackage is
 
     -- The BST type, defined in private section below.
     type BST is limited private;
+
+    -- Initialize the BST to be a null pointer
+    -- which would correspond to an empty tree.
+    procedure init(Tree : in out BST);
     
     -- Return whether or not the tree has size 0
     function isEmpty(Tree : BST) return Boolean;
