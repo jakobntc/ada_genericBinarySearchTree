@@ -58,6 +58,7 @@ package body bstpackage is
         valueFound : Boolean := False;
         wentRight : Boolean := False;
         wentLeft : Boolean := False;
+        lastMove : Character;
         replacementDone : Boolean := False;
         procedure removeHelper(Item : ItemType; n : NodePtr) is
         begin
@@ -70,14 +71,20 @@ package body bstpackage is
                     put_line("Found the node to delete / left pointer wasn't null");
                     wentLeft := True;
                     previousNode := n;
+                    lastMove := 'L';
                     removeHelper(Item, n.Left);
                 elsif n.Right /= NULL then
                     put_line("Found the node to delete / right pointer wasn't null");
                     wentRight := True;
                     previousNode := n;
+                    lastMove := 'R';
                     removeHelper(Item, n.Right);
                 elsif n.left = null and n.Right = null then
-                    put_line("Somehow you messed up big time.");
+                    if lastMove = 'L' then
+                        previousNode.Left := NULL;
+                    elsif lastMove = 'R' then
+                        previousNode.Right := NULL;
+                    end if;
                 end if;
             end if;
             if wentLeft and not replacementDone then
@@ -85,6 +92,7 @@ package body bstpackage is
                 if n.Right /= NULL then
                     put_line("right node wasn't null, going right.");
                     previousNode := n;
+                    lastMove := 'R';
                     removeHelper(Item, n.Right);
                 else
                     put_line("right node pointer was null so replacing data and whatnot.");
@@ -97,6 +105,7 @@ package body bstpackage is
                 if n.Left /= NULL then
                     put_line("left node wasn't null, going left.");
                     previousNode := n;
+                    lastMove := 'L';
                     removeHelper(Item, n.Left);
                 else
                     put_line("Left node pointer was null so replacing data and whatnot.");
@@ -105,13 +114,15 @@ package body bstpackage is
                     previousNode.Left := NULL;
                     replacementDone := True;
                 end if;
-            else
+            elsif not replacementDone then
                 put_line("Searching for data that needs to be deleted.");
                 if compare(Item, n.Data) < 0 then
                     previousNode := n;
+                    lastMove := 'L';
                     removeHelper(Item, n.Left);
                 elsif compare(Item, n.Data) > 0 then
                     previousNode := n;
+                    lastMove := 'R';
                     removeHelper(Item, n.Right);
                 end if;
             end if;
