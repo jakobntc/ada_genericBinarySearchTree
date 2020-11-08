@@ -35,15 +35,12 @@ package body bstpackage is
                 else
                     addHelper(Item, n.Right);
                 end if;
-            else
-                put("Item is already in the array");
             end if;
         end;
     begin
         newNode.Data := Item;
         newNode.Left := NULL;
         newNode.Right := NULL;
-
         if isEmpty(Tree) then
             Tree := BST(newNode);
         else
@@ -51,6 +48,7 @@ package body bstpackage is
         end if;
     end add;
 
+    --
     procedure remove(Item : ItemType; Tree : in out BST) is
         nodeToDelete : NodePtr;
         previousNode : NodePtr;
@@ -63,26 +61,20 @@ package body bstpackage is
         procedure removeHelper(Item : ItemType; n : NodePtr) is
         begin
             if Item = n.Data then
-                put_line("Found the node to delete");
                 nodeToDelete := n;
                 valueFound := True;
-                put_line("checking if the node pointers are null or not.");
                 if n.Left /= NULL then
-                    put_line("Found the node to delete / left pointer wasn't null");
                     wentLeft := True;
                     previousNode := n;
                     lastMove := 'L';
                     removeHelper(Item, n.Left);
                 elsif n.Right /= NULL then
-                    put_line("Found the node to delete / right pointer wasn't null");
                     wentRight := True;
                     previousNode := n;
                     lastMove := 'R';
                     removeHelper(Item, n.Right);
                 elsif n.left = null and n.Right = null then
-                    put_line("Got here dawg.");
                     if lastMove = 'L' then
-                        put_line("Testing");
                         previousNode.Left := NULL;
                     elsif lastMove = 'R' then
                         previousNode.Right := NULL;
@@ -90,14 +82,11 @@ package body bstpackage is
                 end if;
             end if;
             if wentLeft and not replacementDone then
-                put_line("wentLeft was true");
                 if n.Right /= NULL then
-                    put_line("right node wasn't null, going right.");
                     previousNode := n;
                     lastMove := 'R';
                     removeHelper(Item, n.Right);
                 else
-                    put_line("right node pointer was null so replacing data and whatnot.");
                     replacmentData := n.Data;
                     nodeToDelete.Data := replacmentData;
                     if n.left /= NULL then
@@ -109,12 +98,10 @@ package body bstpackage is
                 end if;
             elsif wentRight and not replacementDone then
                 if n.Left /= NULL then
-                    put_line("left node wasn't null, going left.");
                     previousNode := n;
                     lastMove := 'L';
                     removeHelper(Item, n.Left);
                 else
-                    put_line("Left node pointer was null so replacing data and whatnot.");
                     replacmentData := n.Data;
                     nodeToDelete.Data := replacmentData;
                     if n.Right /= NULL then
@@ -125,7 +112,6 @@ package body bstpackage is
                     replacementDone := True;
                 end if;
             elsif not replacementDone then
-                put_line("Searching for data that needs to be deleted.");
                 if compare(Item, n.Data) < 0 then
                     previousNode := n;
                     lastMove := 'L';
@@ -153,13 +139,11 @@ package body bstpackage is
                 found := True;
             else
                 if compare(Item, n.Data) < 0 and n.Left /= NULL then
-                    put_line("went left.");
                     found := containsHelper(Item, n.Left);
                 elsif n.Left = NULL then
                     return found;
                 end if;
                 if compare(Item, n.Data) > 0 and n.Right /= NULL then
-                    put_line("went Right.");
                     found := containsHelper(Item, n.Right);
                 elsif n.Right = NULL then
                     return found;
