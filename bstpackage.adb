@@ -36,7 +36,7 @@ package body bstpackage is
                     addHelper(Item, n.Right);
                 end if;
             else
-                put("Item is already in the array");
+                raise Duplicate_Value;
             end if;
         end;
     begin
@@ -132,7 +132,7 @@ package body bstpackage is
                     if n.Left /= NULL then
                         removeHelper(Item, n.Left);
                     else
-                        put_line("Value was not found.");
+                        raise No_Such_Element;
                     end if;
                 elsif compare(Item, n.Data) > 0 then
                     previousNode := n;
@@ -140,7 +140,7 @@ package body bstpackage is
                     if n.Right /= NULL then
                         removeHelper(Item, n.Right);
                     else
-                        put_line("Value was not found.");
+                        raise No_Such_Element;
                     end if;
                 end if;
             end if;
@@ -207,7 +207,7 @@ package body bstpackage is
         end;
     begin
         if isEmpty(Tree) then
-            put_line("Tree is empty idiot");
+            put_line("Tree is empty.");
         elsif Tree.Left = NULL and Tree.Right = NULL then
             printItem(Tree.Data);
         else
