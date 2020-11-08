@@ -80,7 +80,9 @@ package body bstpackage is
                     lastMove := 'R';
                     removeHelper(Item, n.Right);
                 elsif n.left = null and n.Right = null then
+                    put_line("Got here dawg.");
                     if lastMove = 'L' then
+                        put_line("Testing");
                         previousNode.Left := NULL;
                     elsif lastMove = 'R' then
                         previousNode.Right := NULL;
@@ -98,7 +100,11 @@ package body bstpackage is
                     put_line("right node pointer was null so replacing data and whatnot.");
                     replacmentData := n.Data;
                     nodeToDelete.Data := replacmentData;
-                    previousNode.Right := NULL;
+                    if n.left /= NULL then
+                        previousNode.Right := n.Left;
+                    else
+                        previousNode.Left := NULL;
+                    end if;
                     replacementDone := True;
                 end if;
             elsif wentRight and not replacementDone then
@@ -111,7 +117,11 @@ package body bstpackage is
                     put_line("Left node pointer was null so replacing data and whatnot.");
                     replacmentData := n.Data;
                     nodeToDelete.Data := replacmentData;
-                    previousNode.Left := NULL;
+                    if n.Right /= NULL then
+                        previousNode.Right := n.Right;
+                    else
+                        previousNode.Right := NULL;
+                    end if;
                     replacementDone := True;
                 end if;
             elsif not replacementDone then
@@ -126,7 +136,6 @@ package body bstpackage is
                     removeHelper(Item, n.Right);
                 end if;
             end if;
-            
         end;
     begin
         if isEmpty(Tree) then
@@ -143,13 +152,17 @@ package body bstpackage is
             if n.Data = Item then
                 found := True;
             else
-                if compare(Item, n.Data) < 0 then
-                    put_line("Went left.");
+                if compare(Item, n.Data) < 0 and n.Left /= NULL then
+                    put_line("went left.");
                     found := containsHelper(Item, n.Left);
+                elsif n.Left = NULL then
+                    return found;
                 end if;
-                if compare(Item, n.Data) > 0 then
-                    put_line("Went right.");
+                if compare(Item, n.Data) > 0 and n.Right /= NULL then
+                    put_line("went Right.");
                     found := containsHelper(Item, n.Right);
+                elsif n.Right = NULL then
+                    return found;
                 end if;
             end if;
             return found;
