@@ -129,11 +129,19 @@ package body bstpackage is
                 if compare(Item, n.Data) < 0 then
                     previousNode := n;
                     lastMove := 'L';
-                    removeHelper(Item, n.Left);
+                    if n.Left /= NULL then
+                        removeHelper(Item, n.Left);
+                    else
+                        put_line("Value was not found.");
+                    end if;
                 elsif compare(Item, n.Data) > 0 then
                     previousNode := n;
                     lastMove := 'R';
-                    removeHelper(Item, n.Right);
+                    if n.Right /= NULL then
+                        removeHelper(Item, n.Right);
+                    else
+                        put_line("Value was not found.");
+                    end if;
                 end if;
             end if;
         end;
