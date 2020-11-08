@@ -2,11 +2,14 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body bstpackage is
 
+    -- Initializing the tree the be NULL.
     procedure init(Tree : in out BST) is
     begin
         Tree := NULL;
     end init;
 
+    -- Checking if the tree is empty.
+    -- Returns true if empty.
     function isEmpty(Tree : BST) return Boolean is
     begin
         if Tree = NULL then
@@ -16,9 +19,8 @@ package body bstpackage is
         end if;
     end isEmpty;
 
-    -- check to see if the tree is empty.
-    -- if it is empty then the value would be made the root node of the BST.
-    -- if it is not empty then the value would be placed in the correct location.
+    -- Recursivly searches the binary search tree for the correct position to
+    -- add the data being passed in.
     procedure add(Item : ItemType; Tree : in out BST) is
         newNode : NodePtr := new Node;
         procedure addHelper(Item : ItemType; n : NodePtr) is
@@ -35,6 +37,8 @@ package body bstpackage is
                 else
                     addHelper(Item, n.Right);
                 end if;
+            else
+                raise Duplicate_Value;
             end if;
         end;
     begin
@@ -48,12 +52,11 @@ package body bstpackage is
         end if;
     end add;
 
-    --
+    -- Recursibly searches the binary search tree for the data that is to
+    -- be removed from the tree.
     procedure remove(Item : ItemType; Tree : in out BST) is
         nodeToDelete : NodePtr;
         previousNode : NodePtr;
-        replacmentData : ItemType;
-        valueFound : Boolean := False;
         wentRight : Boolean := False;
         wentLeft : Boolean := False;
         lastMove : Character;
@@ -62,7 +65,6 @@ package body bstpackage is
         begin
             if Item = n.Data then
                 nodeToDelete := n;
-                valueFound := True;
                 if n.Left /= NULL then
                     wentLeft := True;
                     previousNode := n;
@@ -87,8 +89,7 @@ package body bstpackage is
                     lastMove := 'R';
                     removeHelper(Item, n.Right);
                 else
-                    replacmentData := n.Data;
-                    nodeToDelete.Data := replacmentData;
+                    nodeToDelete.Data := n.Data;
                     if n.left /= NULL then
                         previousNode.Right := n.Left;
                     else
@@ -102,8 +103,7 @@ package body bstpackage is
                     lastMove := 'L';
                     removeHelper(Item, n.Left);
                 else
-                    replacmentData := n.Data;
-                    nodeToDelete.Data := replacmentData;
+                    nodeToDelete.Data := n.Data;
                     if n.Right /= NULL then
                         previousNode.Right := n.Right;
                     else
@@ -115,11 +115,19 @@ package body bstpackage is
                 if compare(Item, n.Data) < 0 then
                     previousNode := n;
                     lastMove := 'L';
-                    removeHelper(Item, n.Left);
+                    if n.Left /= NULL then
+                        removeHelper(Item, n.Left);
+                    else
+                        raise No_Such_Element;
+                    end if;
                 elsif compare(Item, n.Data) > 0 then
                     previousNode := n;
                     lastMove := 'R';
-                    removeHelper(Item, n.Right);
+                    if n.Right /= NULL then
+                        removeHelper(Item, n.Right);
+                    else
+                        raise No_Such_Element;
+                    end if;
                 end if;
             end if;
         end;
@@ -131,6 +139,9 @@ package body bstpackage is
         end if;
     end remove;
 
+    -- Recursivly searches the tree for the data being passed in.
+    -- If the data is found in the tree then the function returns true.
+    -- Otherwise false is returned.
     function contains(Item : ItemType; Tree : BST) return Boolean is
         function containsHelper(Item : ItemType; n : NodePtr) return Boolean is
             found : Boolean := False;
@@ -153,7 +164,7 @@ package body bstpackage is
         end;
     begin
         if isEmpty(Tree) then
-            put_line("BST is empty idiot.");
+            put_line("BST is empty.");
             return False;
         else
             return containsHelper(Item, NodePtr(Tree));
@@ -161,9 +172,9 @@ package body bstpackage is
     end contains;
 
 
-    -- Split the BST into three parts (left sub tree, root, right sub tree)
-    -- go down the left sub tree and split that into three parts
-    -- once there is a tree with both left / right pointers that are null print the value
+    -- Recursibly splits the binary search tree into three parts 
+    -- (left sub tree, root, right sub tree). Once there is a node that has
+    -- neither a right or left node pointer, the node data is output.
     procedure printInSortedOrder(Tree : BST) is
         procedure printInSortedOrderHelper(n : NodePtr) is
         begin
@@ -183,12 +194,11 @@ package body bstpackage is
         end;
     begin
         if isEmpty(Tree) then
-            put_line("Tree is empty idiot");
+            put_line("Tree is empty.");
         elsif Tree.Left = NULL and Tree.Right = NULL then
             printItem(Tree.Data);
         else
             printInSortedOrderHelper(NodePtr(Tree));
         end if;
     end printInSortedOrder;
-
 end bstpackage;
