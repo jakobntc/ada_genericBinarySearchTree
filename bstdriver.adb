@@ -50,6 +50,7 @@ begin
             integerBST.remove(number, Tree);
         elsif command = 'p' or command = 'P' then
             printInSortedOrder(Tree);
+            new_line;
         end if;
         skip_line;
     end loop;
