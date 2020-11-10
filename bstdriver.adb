@@ -33,27 +33,32 @@ procedure bstdriver is
 begin
     init(Tree);
     while not End_of_File loop
-        put_line("New command reached.");new_line;
-        get(command);
-        if command = 'a' or command = 'A'then 
-            get(number);
-            integerBST.add(number, Tree);
-        elsif command = 'c' or command = 'C'then
-            get(number);
-            containsReturn := contains(number, Tree);
-            if containsReturn then
-                put_line("YES");
-            elsif not containsReturn then
-                put_line("NO");
+        begin
+            put_line("New command reached.");new_line;
+            get(command);
+            if command = 'a' or command = 'A'then 
+                get(number);
+                integerBST.add(number, Tree);
+            elsif command = 'c' or command = 'C'then
+                get(number);
+                containsReturn := contains(number, Tree);
+                if containsReturn then
+                    put_line("YES");
+                elsif not containsReturn then
+                    put_line("NO");
+                end if;
+            elsif command = 'r' or command = 'R' then
+                get(number);
+                integerBST.remove(number, Tree);
+            elsif command = 'p' or command = 'P' then
+                printInSortedOrder(Tree);
+                new_line;
             end if;
-        elsif command = 'r' or command = 'R' then
-            get(number);
-            integerBST.remove(number, Tree);
-        elsif command = 'p' or command = 'P' then
-            printInSortedOrder(Tree);
-            new_line;
-        end if;
-        skip_line;
+            skip_line;
+        exception
+            when Duplicate_Value => put_line("A duplicate value was input.");
+            when No_Such_Element => Put_Line("There was no such element in this BST.");
+        end;
     end loop;
 end bstdriver;
 
