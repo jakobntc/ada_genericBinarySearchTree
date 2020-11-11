@@ -119,10 +119,13 @@ package body bstpackage is
                     removeHelper(Item, n.Left);
                 else
                     put_line("Left node pointer was null so replacing data and whatnot.");
-                    replacmentData := n.Data;
-                    nodeToDelete.Data := replacmentData;
+                    nodeToDelete.Data := n.Data;
                     if n.Right /= NULL then
-                        previousNode.Right := n.Right;
+                        if lastMove = 'R' then
+                            previousNode.Right := n.Right;
+                        elsif lastMove = 'L' then
+                            previousNode.Left := n.Right;
+                        end if;
                     else
                         if lastMove = 'R' then
                             previousNode.Right := NULL;
