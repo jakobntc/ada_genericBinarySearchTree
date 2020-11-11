@@ -98,7 +98,11 @@ package body bstpackage is
                 elsif n.Right = NULL then
                     nodeToDelete.Data := n.Data;
                     if n.left /= NULL then
-                        previousNode.left := n.Left;
+                        if lastMove = 'R' then
+                            previousNode.Right := n.Left;
+                        elsif lastMove = 'L' then
+                            previousNode.Left := n.Left;
+                        end if;
                     else
                         if lastMove = 'R' then
                             previousNode.Right := NULL;
@@ -116,10 +120,14 @@ package body bstpackage is
                     previousNode := n;
                     lastMove := 'L';
                     removeHelper(Item, n.Left);
-                else
+                elsif n.Left = NULL then
                     nodeToDelete.Data := n.Data;
                     if n.Right /= NULL then
-                        previousNode.Right := n.Right;
+                        if lastMove = 'R' then
+                            previousNode.Right := n.Right;
+                        elsif lastMove = 'L' then
+                            previousNode.Left := n.Right;
+                        end if;
                     else
                         if lastMove = 'R' then
                             previousNode.Right := NULL;
