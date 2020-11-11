@@ -34,7 +34,6 @@ begin
     init(Tree);
     while not End_of_File loop
         begin
-            put_line("New command reached.");new_line;
             get(command);
             if command = 'a' or command = 'A'then 
                 get(number);

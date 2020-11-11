@@ -61,8 +61,12 @@ package body bstpackage is
         wentLeft : Boolean := False;
         lastMove : Character;
         replacementDone : Boolean := False;
+
+        -- Helper procedure to handle the recursion.
         procedure removeHelper(Item : ItemType; n : NodePtr) is
         begin
+
+            -- Handling if the item being removed is found at a current node.
             if Item = n.Data then
                 nodeToDelete := n;
                 if n.Left /= NULL then
@@ -83,15 +87,16 @@ package body bstpackage is
                     end if;
                 end if;
             end if;
+
+            -- finding the largest node contained in the left sub tree of the node 
+            -- that is being removed. The remove is then preformed here.
             if wentLeft and not replacementDone then
                 if n.Right /= NULL then
                     previousNode := n;
                     lastMove := 'R';
                     removeHelper(Item, n.Right);
                 elsif n.Right = NULL then
-                    put_line("right node pointer was null so replacing data and whatnot.");
-                    replacmentData := n.Data;
-                    nodeToDelete.Data := replacmentData;
+                    nodeToDelete.Data := n.Data;
                     if n.left /= NULL then
                         previousNode.left := n.Left;
                     else
@@ -103,6 +108,9 @@ package body bstpackage is
                     end if;
                     replacementDone := True;
                 end if;
+
+            -- finding the smallest node contained in the right sub tree of the node 
+            -- that is being removed. The remove is then preformed here.
             elsif wentRight and not replacementDone then
                 if n.Left /= NULL then
                     previousNode := n;
@@ -121,6 +129,9 @@ package body bstpackage is
                     end if;
                     replacementDone := True;
                 end if;
+
+            -- If the item that is to be removed has not been found yet, this
+            -- block of code is searching for it.
             elsif not replacementDone then
                 if compare(Item, n.Data) < 0 then
                     previousNode := n;
@@ -140,12 +151,12 @@ package body bstpackage is
                     end if;
                 end if;
             end if;
-        end;
+        end; -- End of the helper procedure.
     begin
         if isEmpty(Tree) then
             put_line("Tree is empty");
         else
-            removeHelper(Item, NodePtr(Tree));
+            removeHelper(Item, NodePtr(Tree)); -- The initial recusive call.
         end if;
     end remove;
 
