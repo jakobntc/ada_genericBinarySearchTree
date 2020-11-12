@@ -33,6 +33,7 @@ procedure bstdriver is
 begin
     init(Tree);
     while not End_of_File loop
+        put_line(isEmpty(Tree)'img);
         begin
             put_line("New command reached.");new_line;
             get(command);

@@ -51,6 +51,7 @@ package body bstpackage is
         end if;
     end add;
 
+    -- fix handling if the bst is empty.
     procedure remove(Item : ItemType; Tree : in out BST) is
         nodeToDelete : NodePtr;
         previousNode : NodePtr;
@@ -158,9 +159,17 @@ package body bstpackage is
         end;
     begin
         if isEmpty(Tree) then
-            put_line("Tree is empty");
+            raise No_Such_Element;
         else
-            removeHelper(Item, NodePtr(Tree));
+            if compare(Item, Tree.Data) = 0 then
+                if Tree.Left = NULL and Tree.Right = NULL then
+                    Tree := NULL;
+                else
+                    removeHelper(Item, NodePtr(Tree));
+                end if;
+            else
+                removeHelper(Item, NodePtr(Tree));
+            end if;
         end if;
     end remove;
 
